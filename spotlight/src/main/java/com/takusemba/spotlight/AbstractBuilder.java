@@ -16,12 +16,12 @@ import java.lang.ref.WeakReference;
  * @author takusemba
  * @since 26/06/2017
  **/
-abstract class AbstractBuilder<T extends AbstractBuilder<T, S>, S extends Target> {
+public abstract class AbstractBuilder<T extends AbstractBuilder<T, S>, S extends Target> {
 
 	private WeakReference<Activity> contextWeakReference;
 
-	OnTargetStateChangedListener listener;
-	Shape shape = new Circle(new PointF(0f, 0f), 100f);
+	protected OnTargetStateChangedListener listener;
+	protected Shape shape = new Circle(new PointF(0f, 0f), 100f);
 
 	/**
 	 * return the builder itself
@@ -38,14 +38,14 @@ abstract class AbstractBuilder<T extends AbstractBuilder<T, S>, S extends Target
 	 *
 	 * @return the activity
 	 */
-	Activity getContext() {
+	protected Activity getContext() {
 		return contextWeakReference.get();
 	}
 
 	/**
 	 * Constructor
 	 */
-	AbstractBuilder(@NonNull Activity context) {
+	protected AbstractBuilder(@NonNull Activity context) {
 		contextWeakReference = new WeakReference<>(context);
 	}
 
