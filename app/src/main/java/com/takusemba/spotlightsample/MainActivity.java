@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.takusemba.spotlight.shapes.Circle;
 import com.takusemba.spotlight.CustomTarget;
-import com.takusemba.spotlight.OnSpotlightEndedListener;
 import com.takusemba.spotlight.OnSpotlightStartedListener;
 import com.takusemba.spotlight.OnTargetStateChangedListener;
 import com.takusemba.spotlight.shapes.RoundedRectangle;
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 									.setDescription("third description")
 									.build();
 
-				Spotlight.with(MainActivity.this)
+				Spotlight.Companion.with(MainActivity.this)
 						.setOverlayColor(ContextCompat.getColor(MainActivity.this, R.color.background))
 						.setDuration(1000L)
 						.setAnimation(new DecelerateInterpolator(2f))
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 					}
 				});
 
-				Spotlight.with(MainActivity.this)
+				Spotlight.Companion.with(MainActivity.this)
 						.setOverlayColor(ContextCompat.getColor(MainActivity.this, R.color.background))
 						.setDuration(1000L)
 						.setAnimation(new DecelerateInterpolator(2f))
