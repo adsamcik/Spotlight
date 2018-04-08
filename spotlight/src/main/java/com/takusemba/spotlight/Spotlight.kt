@@ -215,7 +215,7 @@ class Spotlight private constructor(activity: Activity) {
     /**
      * hide Spotlight
      */
-    private fun finishSpotlight() {
+    fun finishSpotlight() {
         if (spotlightView == null) return
         val objectAnimator = ObjectAnimator.ofFloat(spotlightView, "alpha", 1f, 0f)
         objectAnimator.duration = FINISH_SPOTLIGHT_DURATION

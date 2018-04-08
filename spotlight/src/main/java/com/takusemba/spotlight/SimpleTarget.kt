@@ -22,9 +22,9 @@ typealias ButtonClickListener = (view: View, spotlight: Spotlight) -> Unit
  * @since 26/06/2017
  */
 class SimpleTarget private constructor(override val shape: Shape,
-                                       val title: CharSequence,
-                                       val description: CharSequence,
-                                       val buttonData: ButtonData?,
+                                       private val title: CharSequence,
+                                       private val description: CharSequence,
+                                       private val buttonData: List<ButtonData>,
                                        override var listener: OnTargetStateChangedListener?) : Target {
 
     private var view: View? = null
@@ -32,21 +32,21 @@ class SimpleTarget private constructor(override val shape: Shape,
     override fun getView(): View? = view
 
     override fun createView(layoutInflater: LayoutInflater, rootView: ViewGroup, spotlight: Spotlight) {
-        val view = layoutInflater.inflate(R.layout.layout_simple, rootView, false)
-        view.findViewById<TextView>(R.id.title).text = title
-        view.findViewById<TextView>(R.id.description).text = description
+        val viewGroup = layoutInflater.inflate(R.layout.layout_simple, rootView, false) as ViewGroup
+        viewGroup.findViewById<TextView>(R.id.title).text = title
+        viewGroup.findViewById<TextView>(R.id.description).text = description
 
-        val button = view.findViewById<Button>(R.id.button)
-        if(buttonData == null)
-            button.visibility = View.GONE
-        else {
-            button.visibility = View.VISIBLE
+        buttonData.forEach { buttonData ->
+            //When attachToRoot is true it returns viewGroup anyway
+            //AttachToRoot is true to avoid temp layoutParams
+            layoutInflater.inflate(R.layout.layout_button, viewGroup, true)
+            val button = viewGroup.getChildAt(viewGroup.childCount - 1) as Button
             button.text = buttonData.text
             button.setOnClickListener { buttonData.listener.invoke(it, spotlight) }
         }
 
-        calculatePosition(shape.getPoint(), view.pivotY, view)
-        this.view = view
+        calculatePosition(shape.getPoint(), viewGroup.pivotY, viewGroup)
+        this.view = viewGroup
     }
 
     override val point: PointF
@@ -72,11 +72,12 @@ class SimpleTarget private constructor(override val shape: Shape,
         }
 
         val layout = spotlightView.findViewById<LinearLayout>(R.id.container)
-        layout.setPadding(100, 0, 100, 0)
+        val dp64 = 64.dpAsPx
+        layout.setPadding(dp64, 0, dp64, 0)
         when (largest) {
             ABOVE_SPOTLIGHT -> spotlightView.viewTreeObserver
-                    .addOnGlobalLayoutListener { layout.y = point.y - radius - 100f - layout.height.toFloat() }
-            BELOW_SPOTLIGHT -> layout.y = (point.y + radius + 100f).toInt().toFloat()
+                    .addOnGlobalLayoutListener { layout.y = point.y - radius - dp64 - layout.height.toFloat() }
+            BELOW_SPOTLIGHT -> layout.y = (point.y + radius + dp64).toInt().toFloat()
         }
     }
 
@@ -94,7 +95,7 @@ class SimpleTarget private constructor(override val shape: Shape,
     class Builder(context: Activity) : AbstractBuilder<Builder, SimpleTarget>(context) {
         private var title: CharSequence? = null
         private var description: CharSequence? = null
-        private var buttonData: ButtonData? = null
+        private var buttonData: ArrayList<ButtonData> = ArrayList()
 
         override fun self(): Builder {
             return this
@@ -122,8 +123,8 @@ class SimpleTarget private constructor(override val shape: Shape,
             return this
         }
 
-        fun setButtonData(buttonData: ButtonData): Builder {
-            this.buttonData = buttonData
+        fun addButtonData(buttonData: ButtonData): Builder {
+            this.buttonData.add(buttonData)
             return this
         }
 

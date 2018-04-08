@@ -40,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
 			SimpleTarget firstTarget = new SimpleTarget.Builder(MainActivity.this).setPoint(oneX, oneY)
 					.setTitle("first title")
 					.setDescription("first description")
+					.addButtonData(new SimpleTarget.ButtonData("skip", (view, spotlight) -> {
+						spotlight.finishSpotlight();
+						return Unit.INSTANCE;
+					}))
+					.addButtonData(new SimpleTarget.ButtonData("continue", (view, spotlight) -> {
+						spotlight.next();
+						return Unit.INSTANCE;
+					}))
 					.build();
 
 			View two = findViewById(R.id.two);
@@ -49,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
 					new PointF(twoLocation[0] + two.getWidth() / 2f, twoLocation[1] + two.getHeight() / 2f);
 			// make an target
 			SimpleTarget secondTarget = new SimpleTarget.Builder(MainActivity.this).setPoint(point)
-					.setButtonData(new SimpleTarget.ButtonData("continue", (view, spotlight) -> {
-						spotlight.next();
-						return Unit.INSTANCE;
-					}))
 					.setTitle("second title")
 					.setDescription("second description")
 					.setOnSpotlightStartedListener(new OnTargetStateChangedListener() {
