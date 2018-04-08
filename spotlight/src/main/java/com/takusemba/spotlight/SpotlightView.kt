@@ -4,18 +4,14 @@ import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PointF
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
+import android.graphics.*
 import android.support.annotation.AttrRes
 import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-
 import com.takusemba.spotlight.shapes.Shape
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Spotlight View
@@ -28,22 +24,31 @@ internal class SpotlightView : FrameLayout {
     private val paint = Paint()
     private val spotPaint = Paint()
     private val point = PointF()
-    private var animator: ValueAnimator? = null
+
+    private var animator: ValueAnimator = ValueAnimator()
+
     private var listener: OnSpotlightStateChangedListener? = null
+
     private var overlayColor: Int = 0
     private var shape: Shape? = null
 
+    private var animatorLock: ReentrantLock = ReentrantLock()
 
-    constructor(context: Context) : super(context, null) {
-        init()
-    }
 
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
-        init()
-    }
+    constructor(context: Context) : super(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
+    init {
+        bringToFront()
+        setWillNotDraw(false)
+        setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        spotPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        setOnClickListener {
+            if (!animator.isRunning && animator.animatedValue as Float > 0) {
+                if (listener != null) listener!!.onTargetClicked()
+            }
+        }
     }
 
     /**
@@ -72,21 +77,6 @@ internal class SpotlightView : FrameLayout {
     }
 
     /**
-     * prepares to show this Spotlight
-     */
-    private fun init() {
-        bringToFront()
-        setWillNotDraw(false)
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        spotPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        setOnClickListener {
-            if (animator != null && !animator!!.isRunning && animator!!.animatedValue as Float > 0) {
-                if (listener != null) listener!!.onTargetClicked()
-            }
-        }
-    }
-
-    /**
      * draws black background and trims a circle
      *
      * @param canvas the canvas on which the background will be drawn
@@ -95,9 +85,7 @@ internal class SpotlightView : FrameLayout {
         super.onDraw(canvas)
         paint.color = overlayColor
         canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), paint)
-        if (animator != null) {
-            shape!!.draw(canvas, animator!!.animatedValue as Float, spotPaint)
-        }
+        shape?.draw(canvas, animator.animatedValue as Float, spotPaint)
     }
 
     /**
@@ -109,12 +97,23 @@ internal class SpotlightView : FrameLayout {
      * @param animation type of the animation
      */
     fun turnUp(x: Float, y: Float, duration: Long, animation: TimeInterpolator) {
+        animatorLock.lock()
+
+        //wait for animation to finish because end on animator does not seem reliable
+        if (animator.isRunning) {
+            animatorLock.unlock()
+            return
+        }
+
         this.point.set(x, y)
-        animator = ValueAnimator.ofFloat(0f, 1f)
-        animator!!.addUpdateListener { this@SpotlightView.invalidate() }
-        animator!!.interpolator = animation
-        animator!!.duration = duration
-        animator!!.start()
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.addUpdateListener { this@SpotlightView.invalidate() }
+        animator.interpolator = animation
+        animator.duration = duration
+        animator.start()
+        this.animator = animator
+
+        animatorLock.unlock()
     }
 
     /**
@@ -124,11 +123,19 @@ internal class SpotlightView : FrameLayout {
      * @param animation type of the animation
      */
     fun turnDown(duration: Long, animation: TimeInterpolator) {
-        animator = ValueAnimator.ofFloat(1f, 0f)
-        animator!!.addUpdateListener { this@SpotlightView.invalidate() }
-        animator!!.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
+        animatorLock.lock()
 
+        //wait for animation to finish because end on animator does not seem reliable
+        if (animator.isRunning) {
+            animatorLock.unlock()
+            return
+        }
+
+        animator.cancel()
+        val animator = ValueAnimator.ofFloat(1f, 0f)
+        animator.addUpdateListener { this@SpotlightView.invalidate() }
+        animator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
             }
 
             override fun onAnimationEnd(animation: Animator) {
@@ -143,9 +150,12 @@ internal class SpotlightView : FrameLayout {
 
             }
         })
-        animator!!.interpolator = animation
-        animator!!.duration = duration
-        animator!!.start()
+        animator.interpolator = animation
+        animator.duration = duration
+        animator.start()
+        this.animator = animator
+
+        animatorLock.unlock()
     }
 
     /**
