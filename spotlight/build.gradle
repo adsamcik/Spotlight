@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
@@ -16,6 +17,7 @@ android {
 
 dependencies {
     implementation "com.android.support:appcompat-v7:$APP_COMPAT_VERSION"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 def getBintrayUserProperty() {
@@ -100,4 +102,7 @@ afterEvaluate {
     javadoc.classpath += files(android.libraryVariants.collect { variant ->
         variant.javaCompiler.classpath.files
     })
+}
+repositories {
+    mavenCentral()
 }

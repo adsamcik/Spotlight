@@ -4,9 +4,9 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.TimeInterpolator
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.support.annotation.ColorInt
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
@@ -22,7 +22,7 @@ typealias BaseListener = () -> Unit
  * @since 26/06/2017
  */
 class Spotlight private constructor(activity: Activity) {
-    private var targets: ArrayList<out Target>? = null
+    private var targets: LinkedList<out Target> = LinkedList()
     private var duration = DEFAULT_DURATION
     private var animation: TimeInterpolator = DEFAULT_ANIMATION
     private var overlayColor = DEFAULT_OVERLAY_COLOR
@@ -32,7 +32,7 @@ class Spotlight private constructor(activity: Activity) {
     var onEndedListener: BaseListener? = null
 
     init {
-        contextWeakReference = WeakReference(activity)
+        activityWeakReference = WeakReference(activity)
     }
 
     /**
@@ -42,7 +42,7 @@ class Spotlight private constructor(activity: Activity) {
      * @return the Spotlight
      */
     fun <T : Target> setTargets(vararg targets: T): Spotlight {
-        this.targets = ArrayList(Arrays.asList(*targets))
+        this.targets = LinkedList(Arrays.asList(*targets))
         for (target in targets) {
             if (target is CustomTarget) {
                 target.setOnTargetActionListener { finishTarget() }
@@ -129,21 +129,22 @@ class Spotlight private constructor(activity: Activity) {
      * Creates the spotlight view and starts
      */
     private fun spotlightView() {
-        if (context == null) {
-            throw RuntimeException("context is null")
-        }
-        val decorView = (context as Activity).window.decorView
-        val spotlightView = SpotlightView(context!!)
+        val activity = activity!!
+        val decorView = activity.window.decorView
+        val spotlightView = SpotlightView(activity)
         spotlightViewWeakReference = WeakReference(spotlightView)
         spotlightView.setOverlayColor(overlayColor)
         spotlightView.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         (decorView as ViewGroup).addView(spotlightView)
+
+        if (targets.isNotEmpty())
+            targets.first.createView(LayoutInflater.from(activity), spotlightView, this)
         spotlightView.setOnSpotlightStateChangedListener(object : SpotlightView.OnSpotlightStateChangedListener {
             override fun onTargetClosed() {
-                if (!targets!!.isEmpty()) {
-                    val target = targets!!.removeAt(0)
-                    if (target.listener != null) target.listener.onEnded(target)
-                    if (targets!!.size > 0) {
+                if (targets.isNotEmpty()) {
+                    val target = targets.removeAt(0)
+                    target.listener?.onStarted(target)
+                    if (targets.size > 0) {
                         startTarget()
                     } else {
                         finishSpotlight()
@@ -164,17 +165,18 @@ class Spotlight private constructor(activity: Activity) {
      * show Target
      */
     private fun startTarget() {
-        if (targets != null && targets!!.size > 0 && spotlightView != null) {
-            val target = targets!![0]
-            val spotlightView = spotlightView
+        val spotlightView = spotlightView
+        if (targets.size > 0 && spotlightView != null) {
+            val target = targets[0]
 
-            spotlightView!!.removeAllViews()
-            spotlightView.addView(target.view)
+            spotlightView.removeAllViews()
+            spotlightView.addView(target.getView())
             spotlightView.setShape(target.shape)
             spotlightView.turnUp(target.point.x, target.point.y,
                     duration, animation)
-            if (target.listener != null)
-                target.listener =target
+
+            if (targets.size > 1)
+                targets[1].createView(LayoutInflater.from(activity), spotlightView, this)
         }
     }
 
@@ -187,7 +189,7 @@ class Spotlight private constructor(activity: Activity) {
         objectAnimator.duration = START_SPOTLIGHT_DURATION
         objectAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-                if (startedListener != null) startedListener!!.onStarted()
+                onStartedListener?.invoke()
             }
 
             override fun onAnimationEnd(animation: Animator) {
@@ -209,7 +211,7 @@ class Spotlight private constructor(activity: Activity) {
      * hide Target
      */
     private fun finishTarget() {
-        if (targets != null && targets!!.size > 0 && spotlightView != null) {
+        if (targets.size > 0 && spotlightView != null) {
             spotlightView!!.turnDown(duration, animation)
         }
     }
@@ -227,9 +229,9 @@ class Spotlight private constructor(activity: Activity) {
             }
 
             override fun onAnimationEnd(animation: Animator) {
-                val decorView = (context as Activity).window.decorView
+                val decorView = (activity as Activity).window.decorView
                 (decorView as ViewGroup).removeView(spotlightView)
-                if (endedListener != null) endedListener!!.onEnded()
+                onEndedListener?.invoke()
             }
 
             override fun onAnimationCancel(animation: Animator) {
@@ -247,22 +249,23 @@ class Spotlight private constructor(activity: Activity) {
         /**
          * Duration of Spotlight emerging
          */
-        private val START_SPOTLIGHT_DURATION = 500L
+        private const val START_SPOTLIGHT_DURATION = 500L
+
         /**
          * Duration of Spotlight disappearing
          */
-        private val FINISH_SPOTLIGHT_DURATION = 500L
+        private const val FINISH_SPOTLIGHT_DURATION = 500L
         /**
          * Default of Spotlight overlay color
          */
         @ColorInt
         private val DEFAULT_OVERLAY_COLOR = Color.parseColor("#E6000000")
 
-        private val DEFAULT_DURATION = 1000L
+        private const val DEFAULT_DURATION = 1000L
         private val DEFAULT_ANIMATION = DecelerateInterpolator(2f)
 
-        private var spotlightViewWeakReference: WeakReference<SpotlightView>? = null
-        private var contextWeakReference: WeakReference<Activity>
+        private var spotlightViewWeakReference: WeakReference<SpotlightView?> = WeakReference(null)
+        private var activityWeakReference: WeakReference<Activity?> = WeakReference(null)
 
         /**
          * Create Spotlight with activity reference
@@ -279,8 +282,8 @@ class Spotlight private constructor(activity: Activity) {
          *
          * @return the activity
          */
-        private val context: Context?
-            get() = contextWeakReference.get()
+        private val activity: Activity?
+            get() = activityWeakReference.get()
 
         /**
          * Returns [SpotlightView] weak reference
@@ -288,6 +291,6 @@ class Spotlight private constructor(activity: Activity) {
          * @return the SpotlightView
          */
         private val spotlightView: SpotlightView?
-            get() = spotlightViewWeakReference!!.get()
+            get() = spotlightViewWeakReference.get()
     }
 }

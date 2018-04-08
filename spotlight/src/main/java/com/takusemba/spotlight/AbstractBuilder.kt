@@ -19,11 +19,11 @@ abstract class AbstractBuilder<T : AbstractBuilder<T, S>, S : Target>
 /**
  * Constructor
  */
-protected constructor(context: Activity) {
+protected constructor(activity: Activity) {
 
-    private val contextWeakReference: WeakReference<Activity> = WeakReference(context)
+    private val activityWeakReference: WeakReference<Activity> = WeakReference(activity)
 
-    protected var listener: OnTargetStateChangedListener<*>? = null
+    protected var listener: OnTargetStateChangedListener? = null
     protected var shape: Shape = Circle(PointF(0f, 0f), 100f)
 
     /**
@@ -31,8 +31,8 @@ protected constructor(context: Activity) {
      *
      * @return the activity
      */
-    protected val context: Activity
-        get() = contextWeakReference.get()!!
+    protected val activity: Activity
+        get() = activityWeakReference.get()!!
 
     /**
      * return the builder itself
@@ -42,7 +42,7 @@ protected constructor(context: Activity) {
     /**
      * return the built [Target]
      */
-    protected abstract fun build(spotlight: Spotlight): S
+    protected abstract fun build(): S
 
     /**
      * Sets the initial position of target
@@ -100,7 +100,7 @@ protected constructor(context: Activity) {
      * @param listener OnTargetStateChangedListener of target
      * @return This Builder
      */
-    fun setOnSpotlightStartedListener(listener: OnTargetStateChangedListener<S>): T {
+    fun setOnSpotlightStartedListener(listener: OnTargetStateChangedListener): T {
         this.listener = listener
         return self()
     }

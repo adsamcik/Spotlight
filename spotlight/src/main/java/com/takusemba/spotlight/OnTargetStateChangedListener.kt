@@ -6,14 +6,14 @@ package com.takusemba.spotlight
  * @author takusemba
  * @since 13/07/2017
  */
-interface OnTargetStateChangedListener<T : Target> {
+interface OnTargetStateChangedListener {
     /**
      * Called when Target is started
      */
-    fun onStarted(target: T)
+    fun onStarted(target: Target)
 
     /**
      * Called when Target is started
      */
-    fun onEnded(target: T)
+    fun onEnded(target: Target)
 }

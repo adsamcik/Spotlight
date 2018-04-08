@@ -1,10 +1,9 @@
 package com.takusemba.spotlight
 
 import android.graphics.PointF
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import com.takusemba.spotlight.shapes.Circle
 import com.takusemba.spotlight.shapes.Shape
 
 /**
@@ -25,9 +24,9 @@ interface Target {
     /**
      * gets the view of this Target
      *
-     * @return the view of this Target
+     * @return the view of this Target or null if createView was not yet called
      */
-    val view: View?
+    fun getView(): View?
 
     /**
      * gets shape of this Target
@@ -41,10 +40,10 @@ interface Target {
      *
      * @return the listener of this Target
      */
-    val listener: OnTargetStateChangedListener<*>?
+    var listener: OnTargetStateChangedListener?
 
     /**
-     * Creates view
+     * Creates view on demand
      */
-    fun createView(spotlight: Spotlight, root: ViewGroup): View
+    fun createView(layoutInflater: LayoutInflater, rootView: ViewGroup, spotlight: Spotlight)
 }
