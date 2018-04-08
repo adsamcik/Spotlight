@@ -45,7 +45,7 @@ class Spotlight private constructor(activity: Activity) {
         this.targets = LinkedList(Arrays.asList(*targets))
         for (target in targets) {
             if (target is CustomTarget) {
-                target.setOnTargetActionListener { finishTarget() }
+                target.setOnTargetActionListener { next() }
             }
         }
         return this
@@ -154,11 +154,16 @@ class Spotlight private constructor(activity: Activity) {
 
             override fun onTargetClicked() {
                 if (isClosedOnTouchedOutside) {
-                    finishTarget()
+                    next()
                 }
             }
         })
         startSpotlight()
+    }
+
+    fun next() {
+        if (targets.isNotEmpty())
+            spotlightView?.turnDown(duration, animation)
     }
 
     /**
@@ -205,15 +210,6 @@ class Spotlight private constructor(activity: Activity) {
             }
         })
         objectAnimator.start()
-    }
-
-    /**
-     * hide Target
-     */
-    private fun finishTarget() {
-        if (targets.size > 0 && spotlightView != null) {
-            spotlightView!!.turnDown(duration, animation)
-        }
     }
 
     /**

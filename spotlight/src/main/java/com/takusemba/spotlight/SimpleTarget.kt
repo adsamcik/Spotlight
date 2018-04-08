@@ -8,9 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.takusemba.spotlight.shapes.Shape
+
+typealias ButtonClickListener = (view: View, spotlight: Spotlight) -> Unit
 
 /**
  * Position Target
@@ -18,23 +21,30 @@ import com.takusemba.spotlight.shapes.Shape
  * @author takusemba
  * @since 26/06/2017
  */
-class SimpleTarget
-/**
- * Constructor
- */
-private constructor(override val shape: Shape,
-                    val title: CharSequence,
-                    val description: CharSequence,
-                    override var listener: OnTargetStateChangedListener?) : Target {
+class SimpleTarget private constructor(override val shape: Shape,
+                                       val title: CharSequence,
+                                       val description: CharSequence,
+                                       val buttonData: ButtonData?,
+                                       override var listener: OnTargetStateChangedListener?) : Target {
 
     private var view: View? = null
 
     override fun getView(): View? = view
 
     override fun createView(layoutInflater: LayoutInflater, rootView: ViewGroup, spotlight: Spotlight) {
-        val view = layoutInflater.inflate(R.layout.layout_spotlight, rootView, false)
-        (view.findViewById<View>(R.id.title) as TextView).text = title
-        (view.findViewById<View>(R.id.description) as TextView).text = description
+        val view = layoutInflater.inflate(R.layout.layout_simple, rootView, false)
+        view.findViewById<TextView>(R.id.title).text = title
+        view.findViewById<TextView>(R.id.description).text = description
+
+        val button = view.findViewById<Button>(R.id.button)
+        if(buttonData == null)
+            button.visibility = View.GONE
+        else {
+            button.visibility = View.VISIBLE
+            button.text = buttonData.text
+            button.setOnClickListener { buttonData.listener.invoke(it, spotlight) }
+        }
+
         calculatePosition(shape.getPoint(), view.pivotY, view)
         this.view = view
     }
@@ -76,12 +86,15 @@ private constructor(override val shape: Shape,
         private const val BELOW_SPOTLIGHT = 1
     }
 
+    data class ButtonData(val text: String, val listener: ButtonClickListener)
+
     /**
      * Builder class which makes it easier to create [SimpleTarget]
      */
     class Builder(context: Activity) : AbstractBuilder<Builder, SimpleTarget>(context) {
         private var title: CharSequence? = null
         private var description: CharSequence? = null
+        private var buttonData: ButtonData? = null
 
         override fun self(): Builder {
             return this
@@ -109,13 +122,18 @@ private constructor(override val shape: Shape,
             return this
         }
 
+        fun setButtonData(buttonData: ButtonData): Builder {
+            this.buttonData = buttonData
+            return this
+        }
+
         /**
          * Create the [SimpleTarget]
          *
          * @return the created SimpleTarget
          */
         public override fun build(): SimpleTarget {
-            return SimpleTarget(shape, title!!, description!!, listener)
+            return SimpleTarget(shape, title!!, description!!, buttonData, listener)
         }
     }
 }
