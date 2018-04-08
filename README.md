@@ -1,11 +1,14 @@
 # Spotlight
 
+Fork of Spotlight library that is rewritten in Kotlin with added support of continue button and different shapes. MainActivity is kept in Java to ensure API still works well in Java.
+
 <img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/logo_yello.png" alt="alt text" style="width:200;height:200">
 
 ![Platform](http://img.shields.io/badge/platform-android-green.svg?style=flat)
 ![Download](https://api.bintray.com/packages/takusemba/maven/spotlight/images/download.svg)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)
+
 
 ## Gradle
 
@@ -149,6 +152,7 @@ Clone this repo and check out the [app](https://github.com/TakuSemba/Spotlight/t
 
 ## Licence
 ```
+Copyright 2018 Adsamcik.
 Copyright 2017 Taku Semba.
 
 Licensed under the Apache License, Version 2.0 (the "License");
