@@ -37,7 +37,7 @@ Spotlight.with(this)
             }
         })
         .start(); // start Spotlight
-                        
+
 ```
 
 if you want to show Spotlight immediately, use `addOnGlobalLayoutListener` to wait until views are drawn.
@@ -51,12 +51,10 @@ view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlob
 });
 ```
 
-<br/>
-<br/>
-
 <img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/simpleTarget.gif" align="left" width="30%">
 
 ## Simple Target
+
 simply set a title and description, these position will be automatically calculated.
 
 ```java
@@ -80,14 +78,10 @@ SimpleTarget simpleTarget = new SimpleTarget.Builder(this)
 
 ```
 
-<br/>
-<br/>
-<br/>
-<br/>
-
 <img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/customTarget.gif" align="left" width="30%">
 
 ## Custom Target
+
 use your own custom view.
 
 ```java
@@ -110,42 +104,37 @@ CustomTarget customTarget = new CustomTarget.Builder(this)
 
 ```
 
-<br/>
-<br/>
-<br/>
-<br/>
-
 ### Sample
+
 Clone this repo and check out the [app](https://github.com/TakuSemba/Spotlight/tree/master/app) module.
 
 ## Change Log
 
 ### Version: 1.3.0
 
-  * click handling added
+* click handling added
 
 ### Version: 1.2.0
 
-  * overlay color added
+* overlay color added
 
 ### Version: 1.0.3
 
-  * add listener to target
-
+* add listener to target
 
 ### Version: 1.0.1, 1.0.2
 
-  * bug fix
-
+* bug fix
 
 ## Author
 
 * **Taku Semba**
-    * **Github** - (https://github.com/takusemba)
-    * **Twitter** - (https://twitter.com/takusemba)
-    * **Facebook** - (https://www.facebook.com/takusemba)
+* **Github** - (https://github.com/takusemba)
+* **Twitter** - (https://twitter.com/takusemba)
+* **Facebook** - (https://www.facebook.com/takusemba)
 
 ## Licence
+
 ```
 Copyright 2018 Adsamcik.
 Copyright 2017 Taku Semba.
