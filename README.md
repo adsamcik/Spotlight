@@ -1,23 +1,18 @@
-# Spotlight
+# Spotlight kotlin edition
 
-Fork of Spotlight library that is rewritten in Kotlin with added support of continue button and different shapes. MainActivity is kept in Java to ensure API still works well in Java.
+Fork of [Spotlight](https://github.com/TakuSemba/Spotlight) library that is rewritten in Kotlin with added support of continue button and different shapes. Also the min api was raised to 21 to ensure all features work as intended on every supported API. Examples are kept in Java to properly test and show how it can be used without Kotlin. Kotlin usage is usually simplified and can be derived from the Java code.
 
-<img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/logo_yello.png" alt="alt text" style="width:200;height:200">
-
-![Platform](http://img.shields.io/badge/platform-android-green.svg?style=flat)
 ![Download](https://api.bintray.com/packages/takusemba/maven/spotlight/images/download.svg)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)
-
+![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)
 
 ## Gradle
 
 ```groovy
 dependencies {
-    implementation 'com.github.takusemba:spotlight:1.3.3'
+    implementation 'com.adsamcik:spotlight:2.0.0'
 }
 ```
-
 
 ## Usage
 
