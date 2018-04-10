@@ -2,7 +2,7 @@
 
 Fork of [Spotlight](https://github.com/TakuSemba/Spotlight) library that is rewritten in Kotlin with added support of continue button and different shapes. Also the min api was raised to 21 to ensure all features work as intended on every supported API. Examples are kept in Java to properly test and show how it can be used without Kotlin. Kotlin usage is usually simplified and can be derived from the Java code.
 
-![Download](https://api.bintray.com/packages/takusemba/maven/spotlight/images/download.svg)
+[![Download](https://api.bintray.com/packages/adsamcik/android-forks/spotlight/images/download.svg)](https://bintray.com/adsamcik/android-forks/spotlight/_latestVersion)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)
 
