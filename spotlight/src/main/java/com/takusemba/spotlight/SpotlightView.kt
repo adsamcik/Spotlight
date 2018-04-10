@@ -26,6 +26,8 @@ internal class SpotlightView : FrameLayout {
     private val point = PointF()
 
     private var animator: ValueAnimator = ValueAnimator()
+    //animator.isRunning is not reliable enough
+    private var isAnimatorRunning = false
 
     private var listener: OnSpotlightStateChangedListener? = null
 
@@ -45,8 +47,9 @@ internal class SpotlightView : FrameLayout {
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         spotPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         setOnClickListener {
-            if (!animator.isRunning && animator.animatedValue as Float > 0) {
-                if (listener != null) listener!!.onTargetClicked()
+            if (!animator.isRunning && animator.animatedValue is Float && animator.animatedValue as Float > 0) {
+                if (listener != null)
+                    listener!!.onTargetClicked()
             }
         }
     }
@@ -100,16 +103,35 @@ internal class SpotlightView : FrameLayout {
         animatorLock.lock()
 
         //wait for animation to finish because end on animator does not seem reliable
-        if (animator.isRunning) {
+        if (isAnimatorRunning) {
             animatorLock.unlock()
             return
         }
+
+        isAnimatorRunning = true
 
         this.point.set(x, y)
         val animator = ValueAnimator.ofFloat(0f, 1f)
         animator.addUpdateListener { this@SpotlightView.invalidate() }
         animator.interpolator = animation
         animator.duration = duration
+        animator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                isAnimatorRunning = false
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
+
+            }
+        })
         animator.start()
         this.animator = animator
 
@@ -126,20 +148,24 @@ internal class SpotlightView : FrameLayout {
         animatorLock.lock()
 
         //wait for animation to finish because end on animator does not seem reliable
-        if (animator.isRunning) {
+        if (isAnimatorRunning) {
             animatorLock.unlock()
             return
         }
 
-        animator.cancel()
+        isAnimatorRunning = true
+
         val animator = ValueAnimator.ofFloat(1f, 0f)
         animator.addUpdateListener { this@SpotlightView.invalidate() }
         animator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
+
             }
 
             override fun onAnimationEnd(animation: Animator) {
-                if (listener != null) listener!!.onTargetClosed()
+                isAnimatorRunning = false
+                if (listener != null)
+                    listener!!.onTargetClosed()
             }
 
             override fun onAnimationCancel(animation: Animator) {
