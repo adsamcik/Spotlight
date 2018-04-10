@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION as int
-    buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion TARGET_API as int
+
     defaultConfig {
         applicationId "com.takusemba.spotlightsample"
 
-        minSdkVersion MIN_SDK_VERSION as int
-        targetSdkVersion TARGET_SDK_VERSION as int
+        minSdkVersion MIN_API as int
+        targetSdkVersion TARGET_API as int
         versionCode LIBRARY_VERSION_CODE as int
         versionName LIBRARY_VERSION_NAME
 
