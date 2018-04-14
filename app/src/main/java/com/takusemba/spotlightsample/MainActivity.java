@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
 					.setOnSpotlightStartedListener(new OnTargetStateChangedListener() {
 						@Override
 						public void onStarted(@NonNull Target target) {
-							Toast.makeText(MainActivity.this, "target is started", Toast.LENGTH_SHORT).show();
+							Toast.makeText(MainActivity.this, "second target is started", Toast.LENGTH_SHORT).show();
 						}
 
 						@Override
 						public void onEnded(@NonNull Target target) {
-							Toast.makeText(MainActivity.this, "target is ended", Toast.LENGTH_SHORT).show();
+							Toast.makeText(MainActivity.this, "second target is ended", Toast.LENGTH_SHORT).show();
 						}
 					})
 					.build();
