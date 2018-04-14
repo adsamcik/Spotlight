@@ -1,7 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
     ext.TARGET_API = 27
-    ext.MIN_API = 27
+    ext.MIN_API = 21
 
     repositories {
         jcenter()
