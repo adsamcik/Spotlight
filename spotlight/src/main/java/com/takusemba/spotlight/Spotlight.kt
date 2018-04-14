@@ -143,7 +143,7 @@ class Spotlight private constructor(activity: Activity) {
             override fun onTargetClosed() {
                 if (targets.isNotEmpty()) {
                     val target = targets.removeAt(0)
-                    target.listener?.onStarted(target)
+                    target.listener?.onEnded(target)
                     if (targets.size > 0) {
                         startTarget()
                     } else {
@@ -182,6 +182,8 @@ class Spotlight private constructor(activity: Activity) {
 
             if (targets.size > 1)
                 targets[1].createView(LayoutInflater.from(activity), spotlightView, this)
+
+            target.listener?.onStarted(target)
         }
     }
 
