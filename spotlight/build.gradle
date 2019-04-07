@@ -1,103 +1,72 @@
+plugins {
+    id "com.jfrog.bintray" version "1.8.0"
+    id "com.github.dcendents.android-maven" version "2.0"
+}
+
+apply plugin: 'maven-publish'
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka'
+
+ext.version = '2.0.7'
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION as int
-    buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion TARGET_API as int
 
     defaultConfig {
-        minSdkVersion MIN_SDK_VERSION as int
-        targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode LIBRARY_VERSION_CODE as int
-        versionName LIBRARY_VERSION_NAME
+        minSdkVersion MIN_API as int
+        targetSdkVersion TARGET_API as int
+        versionCode 28
+        versionName "$version"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-}
 
-dependencies {
-    implementation "com.android.support:appcompat-v7:$APP_COMPAT_VERSION"
-}
-
-def getBintrayUserProperty() {
-    return hasProperty('bintrayUser') ? bintrayUser : ""
-}
-
-def getBintrayApiKeyProperty() {
-    return hasProperty('bintrayApiKey') ? bintrayApiKey : ""
-}
-
-bintray {
-
-    user = bintrayUserProperty
-    key = bintrayApiKeyProperty
-
-    group = GROUP
-    version = LIBRARY_VERSION_NAME
-    configurations = ['archives']
-    pkg {
-        repo = POM_REPO
-        name = POM_NAME
-        desc = POM_DESCRIPTION
-        websiteUrl = POM_URL
-        issueTrackerUrl = ISSUE_URL
-        vcsUrl = POM_SCM_URL
-        licenses = ['Apache-2.0']
-        labels = ['android']
-        publicDownloadNumbers = true
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name ARTIFACT_ID
-                url POM_URL
-                licenses {
-                    license {
-                        name POM_LICENSE_NAME
-                        url POM_LICENSE_URL
-                    }
-                }
-                developers {
-                    developer {
-                        id POM_DEVELOPER_ID
-                        name POM_DEVELOPER_NAME
-                        email POM_DEVELOPER_EMAIL
-                    }
-                }
-                scm {
-                    connection POM_SCM_CONNECTION
-                    developerConnection POM_SCM_CONNECTION
-                    url POM_URL
-                }
-            }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled = true
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+ext {
+    bintrayRepo = 'android-forks'
+    bintrayName = 'spotlight'
+
+    publishedGroupId = 'com.adsamcik.android-forks'
+    libraryName = 'spotlight'
+    artifact = 'spotlight'
+
+    libraryDescription = 'Fork of Spotlight library (https://github.com/TakuSemba/Spotlight) rewritten in Kotlin with additional features.'
+
+    siteUrl = 'https://github.com/adsamcik/Spotlight'
+    gitUrl = 'https://github.com/adsamcik/Spotlight.git'
+
+    libraryVersion = "$version"
+
+    developerId = 'adsamcik'
+    developerName = ''
+    developerEmail = ''
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
+//gradlew bintrayUpload
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-afterEvaluate {
-    javadoc.classpath += files(android.libraryVariants.collect { variant ->
-        variant.javaCompiler.classpath.files
-    })
+if (file('../local.properties').exists()) {
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+    apply from: 'https://gist.githubusercontent.com/adsamcik/81084e03dd0190772fd32b90136da34e/raw/e8007b585e57a8dfa25ca5446acf1f65c6448373/bintrayv2.gradle'
 }

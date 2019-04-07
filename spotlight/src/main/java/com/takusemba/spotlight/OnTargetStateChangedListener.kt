@@ -1,19 +1,19 @@
-package com.takusemba.spotlight;
+package com.takusemba.spotlight
 
 /**
  * On Target State Changed Listener
  *
  * @author takusemba
  * @since 13/07/2017
- **/
-public interface OnTargetStateChangedListener<T extends Target> {
+ */
+interface OnTargetStateChangedListener {
     /**
      * Called when Target is started
      */
-    void onStarted(T target);
+    fun onStarted(target: Target)
 
     /**
      * Called when Target is started
      */
-    void onEnded(T target);
+    fun onEnded(target: Target)
 }

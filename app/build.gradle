@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION as int
-    buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion TARGET_API as int
+
     defaultConfig {
         applicationId "com.takusemba.spotlightsample"
 
-        minSdkVersion MIN_SDK_VERSION as int
-        targetSdkVersion TARGET_SDK_VERSION as int
+        minSdkVersion MIN_API as int
+        targetSdkVersion TARGET_API as int
         versionCode LIBRARY_VERSION_CODE as int
         versionName LIBRARY_VERSION_NAME
 
@@ -18,10 +18,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$APP_COMPAT_VERSION"
-    implementation "com.android.support.constraint:constraint-layout:1.1.0"
+    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation project(':spotlight')
 }

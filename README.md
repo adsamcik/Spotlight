@@ -1,20 +1,18 @@
-# Spotlight
+# Spotlight kotlin edition
 
-<img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/logo_yello.png" alt="alt text" style="width:200;height:200">
+Fork of [Spotlight](https://github.com/TakuSemba/Spotlight) library that is rewritten in Kotlin with added support of continue button and different shapes. Also the min api was raised to 21 to ensure all features work as intended on every supported API. Examples are kept in Java to properly test and show how it can be used without Kotlin. Kotlin usage is usually simplified and can be derived from the Java code.
 
-![Platform](http://img.shields.io/badge/platform-android-green.svg?style=flat)
-![Download](https://api.bintray.com/packages/takusemba/maven/spotlight/images/download.svg)
+[![Download](https://api.bintray.com/packages/adsamcik/android-forks/spotlight/images/download.svg)](https://bintray.com/adsamcik/android-forks/spotlight/_latestVersion)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)
+![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)
 
 ## Gradle
 
 ```groovy
 dependencies {
-    implementation 'com.github.takusemba:spotlight:1.3.3'
+    implementation 'com.adsamcik:spotlight:2.0.0'
 }
 ```
-
 
 ## Usage
 
@@ -39,7 +37,7 @@ Spotlight.with(this)
             }
         })
         .start(); // start Spotlight
-                        
+
 ```
 
 if you want to show Spotlight immediately, use `addOnGlobalLayoutListener` to wait until views are drawn.
@@ -53,12 +51,10 @@ view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlob
 });
 ```
 
-<br/>
-<br/>
-
 <img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/simpleTarget.gif" align="left" width="30%">
 
 ## Simple Target
+
 simply set a title and description, these position will be automatically calculated.
 
 ```java
@@ -82,14 +78,10 @@ SimpleTarget simpleTarget = new SimpleTarget.Builder(this)
 
 ```
 
-<br/>
-<br/>
-<br/>
-<br/>
-
 <img src="https://github.com/TakuSemba/Spotlight/blob/master/arts/customTarget.gif" align="left" width="30%">
 
 ## Custom Target
+
 use your own custom view.
 
 ```java
@@ -112,43 +104,39 @@ CustomTarget customTarget = new CustomTarget.Builder(this)
 
 ```
 
-<br/>
-<br/>
-<br/>
-<br/>
-
 ### Sample
+
 Clone this repo and check out the [app](https://github.com/TakuSemba/Spotlight/tree/master/app) module.
 
 ## Change Log
 
 ### Version: 1.3.0
 
-  * click handling added
+* click handling added
 
 ### Version: 1.2.0
 
-  * overlay color added
+* overlay color added
 
 ### Version: 1.0.3
 
-  * add listener to target
-
+* add listener to target
 
 ### Version: 1.0.1, 1.0.2
 
-  * bug fix
-
+* bug fix
 
 ## Author
 
 * **Taku Semba**
-    * **Github** - (https://github.com/takusemba)
-    * **Twitter** - (https://twitter.com/takusemba)
-    * **Facebook** - (https://www.facebook.com/takusemba)
+* **Github** - (https://github.com/takusemba)
+* **Twitter** - (https://twitter.com/takusemba)
+* **Facebook** - (https://www.facebook.com/takusemba)
 
 ## Licence
+
 ```
+Copyright 2018 Adsamcik.
 Copyright 2017 Taku Semba.
 
 Licensed under the Apache License, Version 2.0 (the "License");
