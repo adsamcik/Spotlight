@@ -2,10 +2,10 @@ package com.takusemba.spotlight
 
 import android.app.Activity
 import android.graphics.PointF
-import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import com.takusemba.spotlight.shapes.Shape
 
 /**

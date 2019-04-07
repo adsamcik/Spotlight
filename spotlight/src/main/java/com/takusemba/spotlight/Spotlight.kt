@@ -5,7 +5,7 @@ import android.animation.ObjectAnimator
 import android.animation.TimeInterpolator
 import android.app.Activity
 import android.graphics.Color
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
