@@ -12,7 +12,7 @@ class RoundedRectangle : Shape {
     private var mHalfHeight: Float = 0.toFloat()
     private var mRadius: Float = 0.toFloat()
 
-    constructor(view: View, radius: Float) : this(view, 0f, radius) {}
+    constructor(view: View, radius: Float) : this(view, 0f, radius)
 
     constructor(view: View, offset: Float, radius: Float) {
         setPoint(view)
