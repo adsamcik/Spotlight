@@ -10,6 +10,10 @@ abstract class Shape {
 
     abstract fun draw(canvas: Canvas, animValue: Float, paint: Paint)
 
+    /**
+     * Sets point to the center of the [view].
+     * Shapes are centered around this point.
+     */
     protected fun setPoint(view: View) {
         val location = IntArray(2)
         view.getLocationInWindow(location)
@@ -18,14 +22,26 @@ abstract class Shape {
         setPoint(x.toFloat(), y.toFloat())
     }
 
+    /**
+     * Sets point.
+     * Shapes are centered around this point.
+     */
     fun setPoint(point: PointF) {
         this.mPoint = point
     }
 
+    /**
+     * Sets point.
+     * Shapes are centered around this point.
+     */
     fun setPoint(x: Float, y: Float) {
         this.mPoint = PointF(x, y)
     }
 
+    /**
+     * Returns point.
+     * Shapes are centered around this point.
+     */
     fun getPoint(): PointF {
         return mPoint
     }
