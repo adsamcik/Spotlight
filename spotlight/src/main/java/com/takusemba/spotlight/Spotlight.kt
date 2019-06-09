@@ -5,11 +5,11 @@ import android.animation.ObjectAnimator
 import android.animation.TimeInterpolator
 import android.app.Activity
 import android.graphics.Color
-import androidx.annotation.ColorInt
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -41,14 +41,22 @@ class Spotlight private constructor(activity: Activity) {
      * @param targets targets to show
      * @return the Spotlight
      */
-    fun <T : Target> setTargets(vararg targets: T): Spotlight {
-        this.targets = LinkedList(Arrays.asList(*targets))
-        for (target in targets) {
-            if (target is CustomTarget) {
-                target.setOnTargetActionListener { next() }
+    fun setTargets(vararg targets: Target): Spotlight {
+        this.targets = LinkedList<Target>().apply { addAll(targets) }.also { initializeTargets(it) }
+        return this
+    }
+
+    fun setTargets(targetCollection: Collection<Target>): Spotlight {
+        this.targets = LinkedList(targetCollection).also { initializeTargets(it) }
+        return this
+    }
+
+    private fun initializeTargets(targetList: LinkedList<Target>) {
+        targetList.forEach {
+            if (it is CustomTarget) {
+                it.setOnTargetActionListener { next() }
             }
         }
-        return this
     }
 
     /**
@@ -137,8 +145,9 @@ class Spotlight private constructor(activity: Activity) {
         spotlightView.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         (decorView as ViewGroup).addView(spotlightView)
 
-        if (targets.isNotEmpty())
+        if (targets.isNotEmpty()) {
             targets.first.createView(LayoutInflater.from(activity), spotlightView, this)
+        }
         spotlightView.setOnSpotlightStateChangedListener(object : SpotlightView.OnSpotlightStateChangedListener {
             override fun onTargetClosed() {
                 if (targets.isNotEmpty()) {
@@ -192,6 +201,7 @@ class Spotlight private constructor(activity: Activity) {
      */
     private fun startSpotlight() {
         if (spotlightView == null) return
+
         val objectAnimator = ObjectAnimator.ofFloat(spotlightView, "alpha", 0f, 1f)
         objectAnimator.duration = START_SPOTLIGHT_DURATION
         objectAnimator.addListener(object : Animator.AnimatorListener {
@@ -219,6 +229,7 @@ class Spotlight private constructor(activity: Activity) {
      */
     fun finishSpotlight() {
         if (spotlightView == null) return
+
         val objectAnimator = ObjectAnimator.ofFloat(spotlightView, "alpha", 1f, 0f)
         objectAnimator.duration = FINISH_SPOTLIGHT_DURATION
         objectAnimator.addListener(object : Animator.AnimatorListener {
