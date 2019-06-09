@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 							.setView(view)
 							.build();
 
-			view.findViewById(R.id.button).setOnClickListener(view1 -> thirdTarget.closeTarget());
+			view.findViewById(R.id.close_target).setOnClickListener(view1 -> thirdTarget.closeTarget());
 
 			Spotlight.Companion.with(MainActivity.this)
 					.setOverlayColor(ContextCompat.getColor(MainActivity.this, R.color.background))
