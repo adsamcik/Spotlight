@@ -3,6 +3,7 @@ package com.takusemba.spotlight
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import androidx.annotation.AttrRes
@@ -84,6 +85,7 @@ internal class SpotlightView : FrameLayout {
      *
      * @param canvas the canvas on which the background will be drawn
      */
+    @SuppressLint("CanvasSize")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         paint.color = overlayColor
