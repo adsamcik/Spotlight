@@ -47,7 +47,7 @@ internal class SpotlightView : FrameLayout {
 
 	private var activeView: View? = null
 	private var activeViewDrawRect: RectF = RectF()
-	private var rounded: Float = 0f
+	private var viewRectRadius: Float = 16.dp.toFloat()
 
 
 	constructor(context: Context) : super(context, null)
@@ -103,7 +103,6 @@ internal class SpotlightView : FrameLayout {
 			val rect = Rect()
 			view.getGlobalVisibleRect(rect)
 			activeViewDrawRect = RectF(rect)
-			rounded = 16.dp.toFloat()
 		}
 		//view.getDrawingRect(activeViewDrawRect)
 		removeAllViews()
@@ -125,7 +124,7 @@ internal class SpotlightView : FrameLayout {
 
 		if (shapeBounds.contains(activeViewDrawRect)) {
 			paint.blendMode = BlendMode.SRC
-			canvas.drawRoundRect(activeViewDrawRect, 16f, 16f, paint)
+			canvas.drawRoundRect(activeViewDrawRect, viewRectRadius, viewRectRadius, paint)
 		}
 	}
 
