@@ -1,11 +1,7 @@
 package com.takusemba.spotlightsample;
 
 import android.graphics.PointF;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +13,11 @@ import com.takusemba.spotlight.OnTargetStateChangedListener;
 import com.takusemba.spotlight.SimpleTarget;
 import com.takusemba.spotlight.Spotlight;
 import com.takusemba.spotlight.Target;
-import com.takusemba.spotlight.shapes.Circle;
 import com.takusemba.spotlight.shapes.RoundedRectangle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import kotlin.Unit;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,28 +70,26 @@ public class MainActivity extends AppCompatActivity {
 					})
 					.build();
 
-			SimpleTarget thirdTarget;
+			View thirdTargetView = findViewById(R.id.three);
+			SimpleTarget thirdTarget =
+					new SimpleTarget.Builder(MainActivity.this)
+							.setShape(new RoundedRectangle(thirdTargetView, 40f, 20f))
+							.setTitle("third title")
+							.setDescription("third description")
+							.build();
 
-			if (Build.VERSION.SDK_INT >= 21)
-				thirdTarget =
-						new SimpleTarget.Builder(MainActivity.this)
-								.setShape(new RoundedRectangle(findViewById(R.id.three), 40f, 20f))
-								.setTitle("third title")
-								.setDescription("third description")
-								.build();
-			else
-				thirdTarget =
-						new SimpleTarget.Builder(MainActivity.this)
-								.setShape(new Circle(findViewById(R.id.three)))
-								.setTitle("third title")
-								.setDescription("third description")
-								.build();
+			SimpleTarget fourthTarget =
+					new SimpleTarget.Builder(MainActivity.this)
+							.setShape(new RoundedRectangle(thirdTargetView, 400f, 20f))
+							.setTitle("third title")
+							.setDescription("third description")
+							.build();
 
 			Spotlight.Companion.with(MainActivity.this)
 					.setOverlayColor(ContextCompat.getColor(MainActivity.this, R.color.background))
 					.setDuration(1000L)
 					.setAnimation(new DecelerateInterpolator(2f))
-					.setTargets(firstTarget, secondTarget, thirdTarget)
+					.setTargets(fourthTarget, firstTarget, secondTarget, thirdTarget)
 					.setClosedOnTouchedOutside(true)
 					.setOnSpotlightStartedListener(() -> {
 						Toast.makeText(MainActivity.this, "spotlight is started", Toast.LENGTH_SHORT).show();

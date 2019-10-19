@@ -189,8 +189,7 @@ class Spotlight private constructor(activity: Activity) {
 		if (targets.size > 0) {
 			val target = targets[0]
 
-			spotlightView.removeAllViews()
-			spotlightView.addView(target.getView())
+			spotlightView.setView(requireNotNull(target.getView()))
 			spotlightView.setShape(target.shape)
 			spotlightView.turnUp(
 					target.point.x,
@@ -224,13 +223,9 @@ class Spotlight private constructor(activity: Activity) {
 				startTarget()
 			}
 
-			override fun onAnimationCancel(animation: Animator) {
+			override fun onAnimationCancel(animation: Animator) = Unit
 
-			}
-
-			override fun onAnimationRepeat(animation: Animator) {
-
-			}
+			override fun onAnimationRepeat(animation: Animator) = Unit
 		})
 		objectAnimator.start()
 	}

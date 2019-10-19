@@ -3,12 +3,24 @@ package com.takusemba.spotlight.shapes
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import android.graphics.RectF
 import android.view.View
 
 class RoundedRectangle : Shape {
 	private var mHalfWidth: Float = 0.toFloat()
 	private var mHalfHeight: Float = 0.toFloat()
 	private var mRadius: Float = 0.toFloat()
+
+	override val bounds: RectF
+		get() {
+			val point = getPoint()
+			return RectF(
+					point.x - mHalfWidth,
+					point.y - mHalfHeight,
+					point.x + mHalfWidth,
+					point.y + mHalfHeight
+			)
+		}
 
 	constructor(view: View, radius: Float) : this(view, 0f, radius)
 

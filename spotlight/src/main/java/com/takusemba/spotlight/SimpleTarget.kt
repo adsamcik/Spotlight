@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.updateLayoutParams
 import com.takusemba.spotlight.shapes.Shape
 
 typealias ButtonClickListener = (view: View, spotlight: Spotlight) -> Unit
@@ -80,8 +82,11 @@ class SimpleTarget private constructor(
 		}
 
 		val layout = spotlightView.findViewById<LinearLayout>(R.id.container)
-		val dp64 = 64.dpAsPx
-		layout.setPadding(dp64, 0, dp64, 0)
+		val dp64 = 64.dp
+		layout.updateLayoutParams<FrameLayout.LayoutParams> {
+			setMargins(dp64, 0, dp64, 0)
+		}
+		//layout.setPadding(0, 0, 0, 0)
 		when (largest) {
 			ABOVE_SPOTLIGHT -> spotlightView.viewTreeObserver
 					.addOnGlobalLayoutListener { layout.y = point.y - radius - dp64 - layout.height.toFloat() }

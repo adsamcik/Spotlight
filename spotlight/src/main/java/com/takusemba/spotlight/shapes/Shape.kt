@@ -3,10 +3,14 @@ package com.takusemba.spotlight.shapes
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import android.graphics.Rect
+import android.graphics.RectF
 import android.view.View
 
 abstract class Shape {
 	protected var mPoint = PointF(0f, 0f)
+
+	abstract val bounds: RectF
 
 	abstract fun draw(canvas: Canvas, animValue: Float, paint: Paint)
 

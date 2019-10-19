@@ -5,12 +5,14 @@ import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BlendMode
 import android.graphics.Canvas
-import android.graphics.DrawFilter
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -39,8 +41,13 @@ internal class SpotlightView : FrameLayout {
 
 	private var overlayColor: Int = 0
 	private var shape: Shape? = null
+	private var shapeBounds: RectF = RectF()
 
 	private var animatorLock: ReentrantLock = ReentrantLock()
+
+	private var activeView: View? = null
+	private var activeViewDrawRect: RectF = RectF()
+	private var rounded: Float = 0f
 
 
 	constructor(context: Context) : super(context, null)
@@ -87,6 +94,20 @@ internal class SpotlightView : FrameLayout {
 	 */
 	fun setShape(shape: Shape) {
 		this.shape = shape
+		this.shapeBounds.set(shape.bounds)
+	}
+
+	fun setView(view: View) {
+		activeView = view
+		view.post {
+			val rect = Rect()
+			view.getGlobalVisibleRect(rect)
+			activeViewDrawRect = RectF(rect)
+			rounded = 16.dp.toFloat()
+		}
+		//view.getDrawingRect(activeViewDrawRect)
+		removeAllViews()
+		addView(view)
 	}
 
 	/**
@@ -98,9 +119,14 @@ internal class SpotlightView : FrameLayout {
 	override fun onDraw(canvas: Canvas) {
 		super.onDraw(canvas)
 		paint.color = overlayColor
+		paint.blendMode = null
 		canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), paint)
-		canvas.clipOutRect()
 		shape?.draw(canvas, animator.animatedValue as Float, spotPaint)
+
+		if (shapeBounds.contains(activeViewDrawRect)) {
+			paint.blendMode = BlendMode.SRC
+			canvas.drawRoundRect(activeViewDrawRect, 16f, 16f, paint)
+		}
 	}
 
 	/**
@@ -109,7 +135,7 @@ internal class SpotlightView : FrameLayout {
 	 * @param x         initial position x where the shape is showing up
 	 * @param y         initial position y where the shape is showing up
 	 * @param duration  duration of the animation
-	 * @param animation type of the animation
+	 * @param animation type of the animation¶
 	 */
 	fun turnUp(x: Float, y: Float, duration: Long, animation: TimeInterpolator) {
 		animatorLock.lock()
@@ -128,21 +154,15 @@ internal class SpotlightView : FrameLayout {
 		animator.interpolator = animation
 		animator.duration = duration
 		animator.addListener(object : Animator.AnimatorListener {
-			override fun onAnimationStart(animation: Animator) {
-
-			}
+			override fun onAnimationStart(animation: Animator) = Unit
 
 			override fun onAnimationEnd(animation: Animator) {
 				isAnimatorRunning = false
 			}
 
-			override fun onAnimationCancel(animation: Animator) {
+			override fun onAnimationCancel(animation: Animator) = Unit
 
-			}
-
-			override fun onAnimationRepeat(animation: Animator) {
-
-			}
+			override fun onAnimationRepeat(animation: Animator) = Unit
 		})
 		animator.start()
 		this.animator = animator
@@ -170,23 +190,16 @@ internal class SpotlightView : FrameLayout {
 		val animator = ValueAnimator.ofFloat(1f, 0f)
 		animator.addUpdateListener { this@SpotlightView.invalidate() }
 		animator.addListener(object : Animator.AnimatorListener {
-			override fun onAnimationStart(animation: Animator) {
-
-			}
+			override fun onAnimationStart(animation: Animator) = Unit
 
 			override fun onAnimationEnd(animation: Animator) {
 				isAnimatorRunning = false
-				if (listener != null)
-					listener!!.onTargetClosed()
+				listener?.onTargetClosed()
 			}
 
-			override fun onAnimationCancel(animation: Animator) {
+			override fun onAnimationCancel(animation: Animator) = Unit
 
-			}
-
-			override fun onAnimationRepeat(animation: Animator) {
-
-			}
+			override fun onAnimationRepeat(animation: Animator) = Unit
 		})
 		animator.interpolator = animation
 		animator.duration = duration
