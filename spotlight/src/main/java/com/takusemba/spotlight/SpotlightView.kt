@@ -122,7 +122,7 @@ internal class SpotlightView : FrameLayout {
 		canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), paint)
 		shape?.draw(canvas, animator.animatedValue as Float, spotPaint)
 
-		if (shapeBounds.contains(activeViewDrawRect)) {
+		if (shapeBounds.intersect(activeViewDrawRect)) {
 			paint.blendMode = BlendMode.SRC
 			canvas.drawRoundRect(activeViewDrawRect, viewRectRadius, viewRectRadius, paint)
 		}
