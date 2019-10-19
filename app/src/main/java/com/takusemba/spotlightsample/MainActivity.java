@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 					.setOverlayColor(ContextCompat.getColor(MainActivity.this, R.color.background))
 					.setDuration(1000L)
 					.setAnimation(new DecelerateInterpolator(2f))
-					.setTargets(fourthTarget, firstTarget, secondTarget, thirdTarget)
+					.setTargets(firstTarget, secondTarget, thirdTarget, fourthTarget)
 					.setClosedOnTouchedOutside(true)
 					.setOnSpotlightStartedListener(() -> {
 						Toast.makeText(MainActivity.this, "spotlight is started", Toast.LENGTH_SHORT).show();
