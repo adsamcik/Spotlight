@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.DrawFilter
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.PorterDuff
@@ -98,6 +99,7 @@ internal class SpotlightView : FrameLayout {
 		super.onDraw(canvas)
 		paint.color = overlayColor
 		canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), paint)
+		canvas.clipOutRect()
 		shape?.draw(canvas, animator.animatedValue as Float, spotPaint)
 	}
 

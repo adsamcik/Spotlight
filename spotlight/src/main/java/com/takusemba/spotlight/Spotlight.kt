@@ -138,7 +138,7 @@ class Spotlight private constructor(activity: Activity) {
 	 * Creates the spotlight view and starts
 	 */
 	private fun spotlightView() {
-		val activity = activity!!
+		val activity = requireNotNull(activity)
 		val decorView = activity.window.decorView
 		val spotlightView = SpotlightView(activity)
 		spotlightViewWeakReference = WeakReference(spotlightView)
@@ -175,28 +175,33 @@ class Spotlight private constructor(activity: Activity) {
 	}
 
 	fun next() {
-		if (targets.isNotEmpty())
+		if (targets.isNotEmpty()) {
 			spotlightView?.turnDown(duration, animation)
+		}
 	}
 
 	/**
 	 * show Target
 	 */
 	private fun startTarget() {
-		val spotlightView = spotlightView
-		if (targets.size > 0 && spotlightView != null) {
+		val spotlightView = spotlightView ?: return
+
+		if (targets.size > 0) {
 			val target = targets[0]
 
 			spotlightView.removeAllViews()
 			spotlightView.addView(target.getView())
 			spotlightView.setShape(target.shape)
 			spotlightView.turnUp(
-					target.point.x, target.point.y,
-					duration, animation
+					target.point.x,
+					target.point.y,
+					duration,
+					animation
 			)
 
-			if (targets.size > 1)
+			if (targets.size > 1) {
 				targets[1].createView(LayoutInflater.from(activity), spotlightView, this)
+			}
 
 			target.listener?.onStarted(target)
 		}
@@ -206,7 +211,7 @@ class Spotlight private constructor(activity: Activity) {
 	 * show Spotlight
 	 */
 	private fun startSpotlight() {
-		if (spotlightView == null) return
+		val spotlightView = spotlightView ?: return
 
 		val objectAnimator = ObjectAnimator.ofFloat(spotlightView, "alpha", 0f, 1f)
 		objectAnimator.duration = START_SPOTLIGHT_DURATION
@@ -234,7 +239,7 @@ class Spotlight private constructor(activity: Activity) {
 	 * hide Spotlight
 	 */
 	fun finishSpotlight() {
-		if (spotlightView == null) return
+		val spotlightView = spotlightView ?: return
 
 		val objectAnimator = ObjectAnimator.ofFloat(spotlightView, "alpha", 1f, 0f)
 		objectAnimator.duration = FINISH_SPOTLIGHT_DURATION
