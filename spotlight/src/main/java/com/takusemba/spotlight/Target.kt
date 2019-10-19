@@ -14,36 +14,36 @@ import com.takusemba.spotlight.shapes.Shape
  */
 interface Target {
 
-    /**
-     * gets the point of this Target
-     *
-     * @return the point of this Target
-     */
-    val point: PointF
+	/**
+	 * gets the point of this Target
+	 *
+	 * @return the point of this Target
+	 */
+	val point: PointF
 
-    /**
-     * gets the view of this Target
-     *
-     * @return the view of this Target or null if createView was not yet called
-     */
-    fun getView(): View?
+	/**
+	 * gets the view of this Target
+	 *
+	 * @return the view of this Target or null if createView was not yet called
+	 */
+	fun getView(): View?
 
-    /**
-     * gets shape of this Target
-     *
-     * @return shape of this Target
-     */
-    val shape: Shape
+	/**
+	 * gets shape of this Target
+	 *
+	 * @return shape of this Target
+	 */
+	val shape: Shape
 
-    /**
-     * gets the listener of this Target
-     *
-     * @return the listener of this Target
-     */
-    var listener: OnTargetStateChangedListener?
+	/**
+	 * gets the listener of this Target
+	 *
+	 * @return the listener of this Target
+	 */
+	var listener: OnTargetStateChangedListener?
 
-    /**
-     * Creates view on demand
-     */
-    fun createView(layoutInflater: LayoutInflater, rootView: ViewGroup, spotlight: Spotlight)
+	/**
+	 * Creates view on demand
+	 */
+	fun createView(layoutInflater: LayoutInflater, rootView: ViewGroup, spotlight: Spotlight)
 }
