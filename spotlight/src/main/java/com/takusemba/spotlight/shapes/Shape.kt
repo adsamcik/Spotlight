@@ -34,6 +34,7 @@ abstract class Shape {
 	 * Sets point.
 	 * Shapes are centered around this point.
 	 */
+	@Suppress("WeakerAccess")
 	fun setPoint(x: Float, y: Float) {
 		this.mPoint = PointF(x, y)
 	}

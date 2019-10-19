@@ -4,6 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Circle : Shape {
 	private var mRadius: Float = 0.toFloat()
@@ -11,12 +13,7 @@ class Circle : Shape {
 	@JvmOverloads
 	constructor(
 			view: View,
-			radius: Float = (Math.sqrt(
-					Math.pow(
-							view.width.toDouble(),
-							2.0
-					) + Math.pow(view.height.toDouble(), 2.0)
-			) / 2.0).toFloat()
+			radius: Float = (sqrt(view.width.toDouble().pow(2.0) + view.height.toDouble().pow(2.0)) / 2.0).toFloat()
 	) {
 		setPoint(view)
 		this.mRadius = radius

@@ -88,8 +88,7 @@ protected constructor(activity: Activity) {
 	 * @return This Builder
 	 */
 	fun setShape(shape: Shape?): T {
-		if (shape == null)
-			throw IllegalArgumentException("Shape cannot be null")
+		requireNotNull(shape) { "Shape cannot be null" }
 		this.shape = shape
 		return self()
 	}

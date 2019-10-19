@@ -83,7 +83,7 @@ class CustomTarget private constructor(
 		 * @return the created CustomTarget
 		 */
 		public override fun build(): CustomTarget {
-			return CustomTarget(shape, view!!, listener)
+			return CustomTarget(shape, requireNotNull(view), listener)
 		}
 	}
 }
