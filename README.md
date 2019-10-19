@@ -110,6 +110,15 @@ Clone this repo and check out the [app](https://github.com/TakuSemba/Spotlight/t
 
 ## Change Log
 
+### Version: 2.2.0
+
+* Custom view is guaranteed to have a background for readability purposes
+
+### Version: 2.0.0, 2.1.0
+
+* Rewrite to Kotlin
+* Support for shapes
+
 ### Version: 1.3.0
 
 * click handling added
