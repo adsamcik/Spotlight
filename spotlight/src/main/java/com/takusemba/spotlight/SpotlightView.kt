@@ -5,7 +5,6 @@ import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.BlendMode
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
@@ -48,6 +47,7 @@ internal class SpotlightView : FrameLayout {
 	private var activeView: View? = null
 	private var activeViewDrawRect: RectF = RectF()
 	private var viewRectRadius: Float = 16.dp.toFloat()
+	private var viewRectPorterDuff = PorterDuffXfermode(PorterDuff.Mode.SRC)
 
 
 	constructor(context: Context) : super(context, null)
@@ -85,6 +85,7 @@ internal class SpotlightView : FrameLayout {
 	 */
 	fun setOverlayColor(@ColorInt overlayColor: Int) {
 		this.overlayColor = overlayColor
+		paint.color = overlayColor
 	}
 
 	/**
@@ -117,14 +118,13 @@ internal class SpotlightView : FrameLayout {
 	@SuppressLint("CanvasSize")
 	override fun onDraw(canvas: Canvas) {
 		super.onDraw(canvas)
-		paint.color = overlayColor
-		paint.blendMode = null
 		canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), paint)
 		shape?.draw(canvas, animator.animatedValue as Float, spotPaint)
 
 		if (shapeBounds.intersect(activeViewDrawRect)) {
-			paint.blendMode = BlendMode.SRC
+			paint.xfermode = viewRectPorterDuff
 			canvas.drawRoundRect(activeViewDrawRect, viewRectRadius, viewRectRadius, paint)
+			paint.xfermode = null
 		}
 	}
 
