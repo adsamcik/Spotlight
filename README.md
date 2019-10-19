@@ -110,7 +110,7 @@ Clone this repo and check out the [app](https://github.com/TakuSemba/Spotlight/t
 
 ## Change Log
 
-### Version: 2.2.0
+### Version: 2.2.2
 
 * Custom view is guaranteed to have a background for readability purposes
 
